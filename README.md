@@ -3,7 +3,7 @@ kinetic Monte Carlo random walk simulation
 
 
 Run the program
-===============
+------------------------------------
 
 `randomwalk` is the main program.
 
@@ -19,7 +19,7 @@ Run `randomwalk  $PREFIX` to run the program.
 
 
 Input file
-=============
+------------------------------------
 
 *.in :  consists of only numbers
 
@@ -33,6 +33,11 @@ temperature 2
 
 
 Known issues
-==============
+------------------------------------
 
 The time step is estimated from one test run; so if there are sites with very different barriers, the estimated time would be either too much for fast hopping or too less for slow hopping. If the first happens then the program will go out of memory. 
+
+Author(s)
+------------------------------------
+Feng Wu
+
