@@ -1,0 +1,52 @@
+How to run the script: 
+
+$ python3 generate_latt.py structure.xyz rates.dat cutoff
+
+• structure.xyz : xyz file containing the coordinates of the atoms involved in the hopping process
+  for the bulk pristine system (no polaronic distortions).
+  The lattice parameters must be given in the second line as A B C ALPHA BETA GAMMA.
+  Atoms with different atomic coordination must be treated as different kinds. 
+  The label of each atom must be the kind followed by a number (e.g. a counter). 
+  For instance:
+  - in the case of the electron polaron in BiVO4, only the coordinates of V atoms are specified. 
+    Since V atoms are all equivalently coordinated, their labels will be V1, V2, ...
+  - in the case of the hole polarons in beta-Ga2O3, only the coordinates of O atoms are specified.
+    Since there are 3 inequivalent O sites (OI, OII, OIII), the labels will be:
+    OI1, OI2, OI3 ... OII1, OII2, OII3, ... OIII1, OIII2, OIII3, ...
+
+• rates.dat : input file containing the following information for each hopping
+   - the label of the transition in the format kind_1-kind_2 (no extra number here)
+     e.g. V-V for BiVO4, and OI-OII ... for beta-Ga2O3
+   - the distance d between the hopping sites involved (to determine from structure.xyz)
+   - the activation energy Ea
+   - the prefactor (k = prefactor * exp(-Ea / kB*T))
+  notice that there might be hoppings with the same transition label but with different 
+  distances, activation energies and prefactors (as in the case of beta-Ga2O3).
+
+• cutoff: cutoff distance for neighboring atoms considered in the hopping. For instance:
+   - in the case of BiVO4, the distances between first-nearest-neighbors V atoms are ~3.9 A. 
+     So the cutoff distance can be set to 4 A to include only first-nearest-neighbors hoppings
+   - in the case of Ga2O3, the distances between first-nearest-neighbors O atoms can vary 
+     up to 3.3 A. So the cutoff distance can be set to 3.4 A to include only first-nearest-neighbors hoppings
+   - a too larger cutoff would include second-NN hoppings. If that case, make sure you have
+     included such hoppings in rates.dat
+  
+The script identifies all possible hoppings within the specified cutoff and prints out the
+latt file required for the kinetic Monte Carlo calculation. The script also identifies if 
+all transitions were present in the rates.dat file. In case not, the scripts outputs 
+information related to the missing transitions. 
+
+For the examples of BiVO4 and beta-Ga2O3, one gets:
+
+$ python3 generate_latt.py BiVO4.xyz BiVO4-rates.dat 4.0
+$ 128 transitions: 128 found, 0 not found
+
+$ python3 generate_latt.py Ga2O3.xyz Ga2O3-rates.dat 3.3
+$ 864 transitions: 864 found, 0 not found
+
+If some transitions are not found, then their information will be listed. This can be
+used to revise the rates.dat file.
+
+
+
+
